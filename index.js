@@ -1,28 +1,26 @@
 
 
-
-
-const refs = {
-    timerDays: document.querySelector('span[data-value="days"]'),
-    timerHours: document.querySelector('span[data-value="hours"]'),
-    timerMins: document.querySelector('span[data-value="mins"]'),
-    timerSecs: document.querySelector('span[data-value="secs"]'),
-}
-//console.log(refs);
-
 class timerCount {
     constructor({selector, targetDate}) {
-            this.selector = selector;
-            this.targetDate = targetDate;
-            this.timeLeft();
+        this.timeId = null;
+      
+        this.days = document.querySelector(`${selector} [data-value="days"]`);
+        this.hours = document.querySelector(`${selector} [data-value="hours"]`);
+        this.mins = document.querySelector(`${selector} [data-value="mins"]`);
+        this.secs = document.querySelector(`${selector} [data-value="secs"]`);
+  
+        this.targetDate = targetDate;
+        this.timeLeft();     
+            
     }
-    
+        
        
     pad(value) {
         return String(value).padStart(1)
     }
-
+    
      getTimerComponents(time) {
+         
     
         //  * Оставшиеся дни: делим значение UTC на 1000 * 60 * 60 * 24, количество
         //  * миллисекунд в одном дне (миллисекунды * секунды * минуты * часы)
@@ -48,23 +46,24 @@ class timerCount {
         */
         const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
         return {days, hours, mins, secs}
+        
     }
-
+    
    
     showData({days, hours, mins, secs}) {
-        refs.timerDays.textContent = days;
-        refs.timerHours.textContent = hours;
-        refs.timerMins.textContent = mins;
-        refs.timerSecs.textContent = secs;
+        this.days.textContent = days;
+        this.hours.textContent = hours;
+        this.mins.textContent = mins;
+        this.secs.textContent = secs;
     }
-
+    
     timeLeft() {
         const date = document.querySelector(this.selector);
         console.log(date);
 
         const start = this.targetDate.getTime();
-        //console.log(startTime);
-        setInterval(() => {
+        //console.log(start);
+        this.timeId = setInterval(() => {
             const curent = Date.now();
             const deltaTime = start - curent;
             const {days, hours, mins, secs} = this.getTimerComponents(deltaTime);
@@ -72,12 +71,13 @@ class timerCount {
             this.showData({days, hours, mins, secs});
         }, 1000);
     }
+    
 }
 
 
-new timerCount({
+
+
+const timer1 = new timerCount({
     selector: '#timer-1',
     targetDate: new Date('Oct 31, 2021'),
 });
-
-
